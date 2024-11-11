@@ -13,12 +13,24 @@ export default function Viewer() {
   const classes = createClassTransformer(styles);
   const [selectedDashboard, setSelectedDashboard] = useState<string | undefined>('Healthcare');
   const { revealServerDashboardNames } = useGetDashboardNamesList();
-  
+  const [_selectedOrderId, setSelectedOrderId] = useState<number | undefined>();
+  const [_selectedCustomerId, setSelectedCustomerId] = useState<string | undefined>();
+
   function singleSelectComboChange(_: IgrCombo, event: any) {
     setSelectedDashboard(event.detail.newValue[0] as string);
   }
 
   useEffect(() => {
+
+    const headers = {};
+  
+    $.ig.RevealSdkSettings.setAdditionalHeadersProvider(function (url: any) {
+      // Ensure headers have default values if they are empty
+      headers["x-header-one"] = _selectedCustomerId || "ALFKI";
+      headers["x-header-two"] = _selectedOrderId ||  "10248";
+      return headers;
+    });
+  
     $.ig.RVDashboard.loadDashboard(selectedDashboard).then((dashboard: any) => {
         var revealView = new $.ig.RevealView('#revealView');
         revealView.dashboard = dashboard;
