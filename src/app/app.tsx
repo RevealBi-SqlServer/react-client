@@ -43,14 +43,26 @@ export default function App() {
         </IgrNavbar>
         <div className={classes("row-layout group_2")}>
           <IgrNavDrawer open="true" position="relative" ref={navDrawer} className={classes("nav-drawer")}>
+            
+            <div style={{display: 'contents'}} onClick={() => navigate(`/basic-view`)} key={uuid()}>
+              <IgrNavDrawerItem>
+                <div slot="content" key={uuid()}>Load Dashboard</div>
+              </IgrNavDrawerItem>
+            </div>
+
             <div style={{display: 'contents'}} onClick={() => navigate(`/viewer`)} key={uuid()}>
               <IgrNavDrawerItem>
-                <div slot="content" key={uuid()}>Dashboard Viewer</div>
+                <div slot="content" key={uuid()}>Dashboard Picker</div>
               </IgrNavDrawerItem>
             </div>
             <div style={{display: 'contents'}} onClick={() => navigate(`/editor`)} key={uuid()}>
               <IgrNavDrawerItem>
-                <div slot="content" key={uuid()}>New Dashboard</div>
+                <div slot="content" key={uuid()}>Dashboard Builder</div>
+              </IgrNavDrawerItem>
+            </div>
+            <div style={{display: 'contents'}} onClick={() => navigate(`/headers`)} key={uuid()}>
+              <IgrNavDrawerItem>
+                <div slot="content" key={uuid()}>Dynamic Parameters</div>
               </IgrNavDrawerItem>
             </div>
           </IgrNavDrawer>

@@ -27,10 +27,9 @@ export default function Editor() {
   }
 
   useEffect(() => {
-    const headers = {};
+    const headers: { [key: string]: string | number | undefined } = {};
   
     $.ig.RevealSdkSettings.setAdditionalHeadersProvider(function (url: any) {
-      // Ensure headers have default values if they are empty
       headers["x-header-one"] = _selectedCustomerId || value;
       headers["x-header-two"] = _selectedOrderId ||  value1;
       return headers;
@@ -81,9 +80,7 @@ export default function Editor() {
           <div className={classes("row-layout group_2")}>
             <p className={classes("typography__body-1 text_1")}>
               <span>Customer</span>
-            </p>
-            {/* <IgrCombo outlined="true" data={customersCustomers} valueKey="CustomerId" displayKey="CustomerId" singleSelect="true" value={value ? [value] : []} change={(_c, e) => set_value(e.detail.newValue[0])} change={(s, event) => singleSelectComboChange(s, event)} className={classes("single-select-combo")}></IgrCombo> */}
-         
+            </p>        
             <IgrCombo
               outlined="true"
               data={customersCustomers}
@@ -103,7 +100,6 @@ export default function Editor() {
             <p className={classes("typography__body-1 text_1")}>
               <span>Order</span>
             </p>
-            {/* <IgrCombo outlined="true" data={ordersOrders} valueKey="OrderID" displayKey="OrderID" singleSelect="true" value={value1 ? [value1] : []} change={(_c, e) => set_value(e.detail.newValue[0])} change={(s, event) => singleSelectComboChange1(s, event)} className={classes("single-select-combo_1")}></IgrCombo> */}
             <IgrCombo
                 outlined="true"
                 data={ordersOrders}
@@ -122,7 +118,7 @@ export default function Editor() {
         </div>
         <div className={classes("column-layout group_4")}>
           <div className={classes("group_5")}>
-          <div id='revealView' style={{ height: 'calc(100vh - 135px)', width: '100%', position: 'relative' }}></div>
+          <div id='revealView' style={{ height: 'calc(100vh - 140px)', width: '100%', position: 'relative' }}></div>
           </div>
         </div>
       </div>

@@ -1,7 +1,5 @@
-import { useGlobalContext } from '../hooks/context-hooks';
 import { IgrCombo, IgrComboModule } from 'igniteui-react';
 import { useEffect, useState } from 'react';
-import { RevealSdkSettings, RevealViewOptions } from '@revealbi/ui';
 import { useGetDashboardNamesList } from '../hooks/reveal-server-hooks';
 import styles from './viewer.module.css';
 import createClassTransformer from '../style-utils';
@@ -22,12 +20,11 @@ export default function Viewer() {
 
   useEffect(() => {
 
-    const headers = {};
+    const headers: { [key: string]: string } = {};
   
     $.ig.RevealSdkSettings.setAdditionalHeadersProvider(function (url: any) {
-      // Ensure headers have default values if they are empty
       headers["x-header-one"] = _selectedCustomerId || "ALFKI";
-      headers["x-header-two"] = _selectedOrderId ||  "10248";
+      headers["x-header-two"] = _selectedOrderId?.toString() || "10248";
       return headers;
     });
   
@@ -50,7 +47,7 @@ export default function Viewer() {
         </div>
         <div className={classes("column-layout group_2")}>
           <div className={classes("group_3")}>
-          <div id='revealView' style={{ height: 'calc(100vh - 135px)', width: '100%', position: 'relative' }}></div>
+          <div id='revealView' style={{ height: 'calc(100vh - 140px)', width: '100%', position: 'relative' }}></div>
           </div>
         </div>
       </div>
