@@ -2,7 +2,8 @@ import { createContext, Dispatch, useContext, useEffect, useState } from 'react'
 
 declare var $: any;
 
-export const GlobalContext = createContext<{globalState: GlobalStateInterface, setGlobalState: Dispatch<React.SetStateAction<GlobalStateInterface>>}>(undefined as any);
+export const GlobalContext = createContext<{globalState: GlobalStateInterface, 
+      setGlobalState: Dispatch<React.SetStateAction<GlobalStateInterface>>}>(undefined as any);
 export const useGlobalContext = () => useContext(GlobalContext);
 
 export const useGlobalState = () => {
@@ -13,10 +14,9 @@ export const useGlobalState = () => {
   const [globalState, setGlobalState] = useState<GlobalStateInterface>(initialState);
 
   useEffect(() => {
-    // Set the Reveal SDK base URL once on initialization
     $.ig.RevealSdkSettings.setBaseUrl(globalState.revealServer);
+    $.ig.RevealSdkSettings.enableActionsOnHoverTooltip = true;    
   }, [globalState.revealServer]);
-
 
   return { globalState, setGlobalState };
 };

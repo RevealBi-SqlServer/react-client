@@ -36,6 +36,8 @@ export default function Editor() {
     });
   
     const revealView = new $.ig.RevealView('#revealView');
+    revealView.interactiveFilteringEnabled = true;
+
     revealView.startInEditMode = true;
   
     revealView.onDataSourcesRequested = (callback: any) => {

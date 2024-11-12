@@ -60,11 +60,20 @@ export default function App() {
                 <div slot="content" key={uuid()}>Dashboard Builder</div>
               </IgrNavDrawerItem>
             </div>
+            
+            
             <div style={{display: 'contents'}} onClick={() => navigate(`/headers`)} key={uuid()}>
               <IgrNavDrawerItem>
                 <div slot="content" key={uuid()}>Dynamic Parameters</div>
               </IgrNavDrawerItem>
             </div>
+
+            <div style={{display: 'contents'}} onClick={() => navigate(`/themes`)} key={uuid()}>
+              <IgrNavDrawerItem>
+                <div slot="content" key={uuid()}>Theme Switcher</div>
+              </IgrNavDrawerItem>
+            </div>
+
           </IgrNavDrawer>
           <div className={classes("view-container")}>
             <Outlet></Outlet>

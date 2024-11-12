@@ -6,19 +6,25 @@ declare var $: any;
 
 export default function BasicView() {
   const classes = createClassTransformer(styles);
-  const [selectedDashboard, setSelectedDashboard] = useState<string | undefined>('Healthcare');
-
+  const [selectedDashboard, setSelectedDashboard] = useState<string | undefined>('Marketing');
+  const [_selectedOrderId, setSelectedOrderId] = useState<number | undefined>();
+  const [_selectedCustomerId, setSelectedCustomerId] = useState<string | undefined>();
+  
   useEffect(() => {
-    if (selectedDashboard) {
-      $.ig.RVDashboard.loadDashboard(selectedDashboard)
-        .then((dashboard: any) => {
-          var revealView = new $.ig.RevealView('#revealView');
-          revealView.dashboard = dashboard;
-        })
-        .catch((error: any) => {
-          console.error("Error loading dashboard:", error);
-        });
-    }
+
+    const headers: { [key: string]: string } = {};
+  
+    $.ig.RevealSdkSettings.setAdditionalHeadersProvider(function (url: any) {
+      headers["x-header-one"] = _selectedCustomerId || "ALFKI";
+      headers["x-header-two"] = _selectedOrderId?.toString() || "10248";
+      return headers;
+    });
+
+    $.ig.RVDashboard.loadDashboard(selectedDashboard).then((dashboard: any) => {
+      var revealView = new $.ig.RevealView('#revealView');
+      revealView.interactiveFilteringEnabled = true;
+      revealView.dashboard = dashboard;
+  });
   }, [selectedDashboard]);
   
 

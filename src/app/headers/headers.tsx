@@ -34,6 +34,7 @@ export default function Headers() {
 
       $.ig.RVDashboard.loadDashboard('Customer Orders').then((dashboard: any) => {
         const revealView = new $.ig.RevealView('#revealView');
+        revealView.interactiveFilteringEnabled = true;
         revealView.dashboard = dashboard;
       });
     }

@@ -30,6 +30,7 @@ export default function Viewer() {
   
     $.ig.RVDashboard.loadDashboard(selectedDashboard).then((dashboard: any) => {
         var revealView = new $.ig.RevealView('#revealView');
+        revealView.interactiveFilteringEnabled = true;
         revealView.dashboard = dashboard;
     });
   }, [selectedDashboard]);
