@@ -36,7 +36,7 @@ export default function App() {
                 <span>|</span>
               </p>
               <p className={classes("typography__subtitle-2 text_1")}>
-                <span>PoC Kickoff Sample</span>
+                <span>React PoC Kickoff Sample</span>
               </p>
             </div>
           </div>
