@@ -9,49 +9,78 @@ IgrComboModule.register();
 
 export default function Viewer() {
   const classes = createClassTransformer(styles);
-  const [selectedDashboard, setSelectedDashboard] = useState<string | undefined>('Healthcare');
-  const { revealServerDashboardNames } = useGetDashboardNamesList();
   const [_selectedOrderId, setSelectedOrderId] = useState<number | undefined>();
   const [_selectedCustomerId, setSelectedCustomerId] = useState<string | undefined>();
+  const { revealServerDashboardNames } = useGetDashboardNamesList();
+  const [value, setValue] = useState<string | undefined>();
+  const [selectedDashboard, setSelectedDashboard] = useState<string | undefined>();
 
   function singleSelectComboChange(_: IgrCombo, event: any) {
-    setSelectedDashboard(event.detail.newValue[0] as string);
+    const newDashboard = event.detail.newValue[0] as string;
+    setValue(newDashboard);
+    setSelectedDashboard(newDashboard);
   }
 
   useEffect(() => {
+    if (revealServerDashboardNames && revealServerDashboardNames.length > 0 && !value) {
+      const initialDashboard = revealServerDashboardNames[0].dashboardFileName;
+      setValue(initialDashboard);
+      setSelectedDashboard(initialDashboard);
 
-    const headers: { [key: string]: string } = {};
-  
-    $.ig.RevealSdkSettings.setAdditionalHeadersProvider(function (url: any) {
-      headers["x-header-one"] = _selectedCustomerId || "ALFKI";
-      headers["x-header-two"] = _selectedOrderId?.toString() || "10248";
-      return headers;
-    });
-  
-    $.ig.RVDashboard.loadDashboard(selectedDashboard).then((dashboard: any) => {
-        var revealView = new $.ig.RevealView('#revealView');
+      const headers: { [key: string]: string } = {};
+      $.ig.RevealSdkSettings.setAdditionalHeadersProvider(function (url: any) {
+        headers["x-header-one"] = _selectedCustomerId || "ALFKI";
+        headers["x-header-two"] = _selectedOrderId?.toString() || "10248";
+        return headers;
+      });
+
+      $.ig.RVDashboard.loadDashboard(initialDashboard).then((dashboard: any) => {
+        const revealView = new $.ig.RevealView('#revealView');
         revealView.interactiveFilteringEnabled = true;
         revealView.dashboard = dashboard;
+      });
+    }
+  }, [revealServerDashboardNames, value]);
+
+  useEffect(() => {
+    const headers: { [key: string]: string } = {};
+    $.ig.RevealSdkSettings.setAdditionalHeadersProvider(function (url: any) {
+      headers["x-header-one"] = "ALFKI";
+      return headers;
     });
+
+    if (selectedDashboard) {
+      $.ig.RVDashboard.loadDashboard(selectedDashboard).then((dashboard: any) => {
+        const revealView = new $.ig.RevealView('#revealView');
+        revealView.dashboard = dashboard;
+      });
+    }
   }, [selectedDashboard]);
 
   return (
-    <>
-      <div className={classes("column-layout viewer-container")}>
-        <div className={classes("column-layout group")}>
-          <div className={classes("row-layout group_1")}>
-            <p className={classes("typography__body-1 text")}>
-              <span>Select a dashboard to view / edit</span>
-            </p>
-            <IgrCombo outlined="true" value={["Healthcare"]} data={revealServerDashboardNames} valueKey="dashboardFileName" displayKey="dashboardTitle" singleSelect="true" change={(s, event) => singleSelectComboChange(s, event)} className={classes("single-select-combo")}></IgrCombo>
-          </div>
-        </div>
-        <div className={classes("column-layout group_2")}>
-          <div className={classes("group_3")}>
-          <div id='revealView' style={{ height: 'calc(100vh - 140px)', width: '100%', position: 'relative' }}></div>
-          </div>
+    <div className={classes("column-layout viewer-container")}>
+      <div className={classes("column-layout group")}>
+        <div className={classes("row-layout group_1")}>
+          <p className={classes("typography__body-1 text")}>
+            <span>Select a dashboard to view / edit</span>
+          </p>
+          <IgrCombo
+            outlined="true"
+            data={revealServerDashboardNames || []}
+            valueKey="dashboardFileName"
+            displayKey="dashboardTitle"
+            singleSelect="true"
+            value={value ? [value] : []}
+            change={singleSelectComboChange}
+            className={classes("single-select-combo")}
+          />
         </div>
       </div>
-    </>
+      <div className={classes("column-layout group_2")}>
+        <div className={classes("group_3")}>
+          <div id='revealView' style={{ height: 'calc(100vh - 140px)', width: '100%', position: 'relative' }}></div>
+        </div>
+      </div>
+    </div>
   );
 }

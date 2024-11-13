@@ -10,16 +10,18 @@ IgrComboModule.register();
 
 export default function Themes() {
   const classes = createClassTransformer(styles);
-  const [selectedTheme, setSelectedTheme] = useState<string>("ml");
+  const [value, setValue] = useState<string | undefined>(themes[0]?.value); 
+  const [selectedTheme, setSelectedTheme] = useState<string>(themes[0]?.value || "ml");
 
   useEffect(() => {
     const originalTheme = $.ig.RevealSdkSettings.theme;
+    applyTheme(selectedTheme);
     loadDashboard("Marketing");
 
     return () => {
       $.ig.RevealSdkSettings.theme = originalTheme;
     };
-  }, []);
+  }, [selectedTheme]);
 
   const loadDashboard = (dashboardName: string) => {
     $.ig.RVDashboard.loadDashboard(dashboardName)
@@ -35,6 +37,7 @@ export default function Themes() {
 
   const handleThemeChange = (_: IgrCombo, event: any) => {
     const newTheme = event.detail.newValue[0] as string;
+    setValue(newTheme); 
     setSelectedTheme(newTheme);
     applyTheme(newTheme);
     loadDashboard("Marketing");
@@ -50,7 +53,7 @@ export default function Themes() {
           <IgrCombo
             outlined="true"
             data={themes}
-            value={["Mountain Light"]}
+            value={value ? [value] : []} // Set the initial value of the combo box
             valueKey="value"
             displayKey="label"
             singleSelect="true"

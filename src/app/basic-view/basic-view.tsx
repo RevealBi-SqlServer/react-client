@@ -1,15 +1,12 @@
-import { useGlobalContext } from '../hooks/context-hooks';
 import styles from './basic-view.module.css';
 import createClassTransformer from '../style-utils';
-import { useEffect, useState } from 'react';
+import { useEffect } from 'react';
 
 declare var $: any;
 
 export default function BasicView() {
   const classes = createClassTransformer(styles);
-  const { globalState } = useGlobalContext();
-  const [selectedDashboard, setSelectedDashboard] = useState<string | undefined>('Marketing');
-  
+
   useEffect(() => {
     const headers: { [key: string]: string } = {};
 
