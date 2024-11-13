@@ -1,5 +1,5 @@
 import { IgrCombo, IgrComboModule } from 'igniteui-react';
-import { useEffect, useState } from 'react';
+import { useEffect, useState, useCallback } from 'react';
 import { useGetDashboardNamesList } from '../hooks/reveal-server-hooks';
 import styles from './viewer.module.css';
 import createClassTransformer from '../style-utils';
@@ -12,50 +12,43 @@ export default function Viewer() {
   const [_selectedOrderId, setSelectedOrderId] = useState<number | undefined>();
   const [_selectedCustomerId, setSelectedCustomerId] = useState<string | undefined>();
   const { revealServerDashboardNames } = useGetDashboardNamesList();
-  const [value, setValue] = useState<string | undefined>();
   const [selectedDashboard, setSelectedDashboard] = useState<string | undefined>();
 
-  function singleSelectComboChange(_: IgrCombo, event: any) {
-    const newDashboard = event.detail.newValue[0] as string;
-    setValue(newDashboard);
-    setSelectedDashboard(newDashboard);
-  }
+  const applyHeaders = useCallback(() => {
+    const headers: { [key: string]: string } = {
+      "x-header-one": _selectedCustomerId || "ALFKI",
+      "x-header-two": _selectedOrderId?.toString() || "10248",
+    };
+    $.ig.RevealSdkSettings.setAdditionalHeadersProvider(() => headers);
+  }, [_selectedCustomerId, _selectedOrderId]);
 
-  useEffect(() => {
-    if (revealServerDashboardNames && revealServerDashboardNames.length > 0 && !value) {
-      const initialDashboard = revealServerDashboardNames[0].dashboardFileName;
-      setValue(initialDashboard);
-      setSelectedDashboard(initialDashboard);
-
-      const headers: { [key: string]: string } = {};
-      $.ig.RevealSdkSettings.setAdditionalHeadersProvider(function (url: any) {
-        headers["x-header-one"] = _selectedCustomerId || "ALFKI";
-        headers["x-header-two"] = _selectedOrderId?.toString() || "10248";
-        return headers;
-      });
-
-      $.ig.RVDashboard.loadDashboard(initialDashboard).then((dashboard: any) => {
+  const loadDashboard = useCallback(
+    (dashboardFileName: string) => {
+      $.ig.RVDashboard.loadDashboard(dashboardFileName).then((dashboard: any) => {
         const revealView = new $.ig.RevealView('#revealView');
         revealView.interactiveFilteringEnabled = true;
         revealView.dashboard = dashboard;
       });
-    }
-  }, [revealServerDashboardNames, value]);
+    },
+    []
+  );
+
+  const handleComboChange = (_: IgrCombo, event: any) => {
+    const newDashboard = event.detail.newValue[0] as string;
+    setSelectedDashboard(newDashboard);
+  };
 
   useEffect(() => {
-    const headers: { [key: string]: string } = {};
-    $.ig.RevealSdkSettings.setAdditionalHeadersProvider(function (url: any) {
-      headers["x-header-one"] = "ALFKI";
-      return headers;
-    });
-
-    if (selectedDashboard) {
-      $.ig.RVDashboard.loadDashboard(selectedDashboard).then((dashboard: any) => {
-        const revealView = new $.ig.RevealView('#revealView');
-        revealView.dashboard = dashboard;
-      });
+    if (revealServerDashboardNames && revealServerDashboardNames.length > 0 && !selectedDashboard) {
+      const initialDashboard = revealServerDashboardNames[0].dashboardFileName;
+      setSelectedDashboard(initialDashboard);
     }
-  }, [selectedDashboard]);
+  }, [revealServerDashboardNames, selectedDashboard]);
+
+  useEffect(() => {
+    applyHeaders();
+    if (selectedDashboard) loadDashboard(selectedDashboard);
+  }, [applyHeaders, selectedDashboard, loadDashboard]);
 
   return (
     <div className={classes("column-layout viewer-container")}>
@@ -70,15 +63,22 @@ export default function Viewer() {
             valueKey="dashboardFileName"
             displayKey="dashboardTitle"
             singleSelect="true"
-            value={value ? [value] : []}
-            change={singleSelectComboChange}
+            value={selectedDashboard ? [selectedDashboard] : []}
+            change={handleComboChange}
             className={classes("single-select-combo")}
           />
         </div>
       </div>
       <div className={classes("column-layout group_2")}>
         <div className={classes("group_3")}>
-          <div id='revealView' style={{ height: 'calc(100vh - 140px)', width: '100%', position: 'relative' }}></div>
+          <div
+            id="revealView"
+            style={{
+              height: 'calc(100vh - 140px)',
+              width: '100%',
+              position: 'relative',
+            }}
+          ></div>
         </div>
       </div>
     </div>

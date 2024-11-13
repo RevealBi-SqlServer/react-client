@@ -53,7 +53,7 @@ export default function Themes() {
           <IgrCombo
             outlined="true"
             data={themes}
-            value={value ? [value] : []} // Set the initial value of the combo box
+            value={value ? [value] : []} 
             valueKey="value"
             displayKey="label"
             singleSelect="true"
