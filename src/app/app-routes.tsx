@@ -12,5 +12,4 @@ export const routes = [
   { path: 'editor', element: <Editor />, text: 'Create Dashboards' },
   { path: 'headers', element: <Headers />, text: 'Dynamic Customer Header' },
   { path: 'themes', element: <Themes />, text: 'Theme Switcher' }
-  
 ];

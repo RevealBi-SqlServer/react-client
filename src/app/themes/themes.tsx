@@ -50,6 +50,7 @@ export default function Themes() {
           <IgrCombo
             outlined="true"
             data={themes}
+            value={["Mountain Light"]}
             valueKey="value"
             displayKey="label"
             singleSelect="true"

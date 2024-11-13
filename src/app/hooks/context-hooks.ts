@@ -8,14 +8,13 @@ export const useGlobalContext = () => useContext(GlobalContext);
 
 export const useGlobalState = () => {
   const initialState = {
-    revealServer: 'http://localhost:5111'
   } as GlobalStateInterface;
 
   const [globalState, setGlobalState] = useState<GlobalStateInterface>(initialState);
 
   useEffect(() => {
-    $.ig.RevealSdkSettings.setBaseUrl(globalState.revealServer);
-    $.ig.RevealSdkSettings.enableActionsOnHoverTooltip = true;    
+   // $.ig.RevealSdkSettings.setBaseUrl("http://localhost:5111");
+    
   }, [globalState.revealServer]);
 
   return { globalState, setGlobalState };

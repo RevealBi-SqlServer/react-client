@@ -43,7 +43,7 @@ export default function Viewer() {
             <p className={classes("typography__body-1 text")}>
               <span>Select a dashboard to view / edit</span>
             </p>
-            <IgrCombo outlined="true" data={revealServerDashboardNames} valueKey="dashboardFileName" displayKey="dashboardTitle" singleSelect="true" change={(s, event) => singleSelectComboChange(s, event)} className={classes("single-select-combo")}></IgrCombo>
+            <IgrCombo outlined="true" value={["Healthcare"]} data={revealServerDashboardNames} valueKey="dashboardFileName" displayKey="dashboardTitle" singleSelect="true" change={(s, event) => singleSelectComboChange(s, event)} className={classes("single-select-combo")}></IgrCombo>
           </div>
         </div>
         <div className={classes("column-layout group_2")}>

@@ -10,6 +10,10 @@ Number.isNaN = Number.isNaN || function(value) {
   return value !== value;
 }
 
+declare var $: any;
+$.ig.RevealSdkSettings.setBaseUrl("http://localhost:5111");
+$.ig.RevealSdkSettings.enableActionsOnHoverTooltip = true;    
+
 const router = createBrowserRouter([
   {
     element: <App />,
