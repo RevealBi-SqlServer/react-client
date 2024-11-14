@@ -74,6 +74,12 @@ export default function App() {
               </IgrNavDrawerItem>
             </div>
 
+            <div style={{display: 'contents'}} onClick={() => navigate(`/custom-menus`)} key={uuid()}>
+              <IgrNavDrawerItem>
+                <div slot="content" key={uuid()}>Custom Menus</div>
+              </IgrNavDrawerItem>
+            </div>
+
           </IgrNavDrawer>
           <div className={classes("view-container")}>
             <Outlet></Outlet>
