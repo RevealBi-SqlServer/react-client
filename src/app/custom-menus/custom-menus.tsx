@@ -55,6 +55,26 @@ export default function CustomMenus() {
           }
         }
       };
+
+      revealView.onTooltipShowing = ({ cell, visualization, customItems }) => {
+        const icons = ["https://svgsilh.com/svg/26432.svg", "https://svgsilh.com/svg/1879084.svg"];
+        const fetchData = (allFields, col, val, isDate, fmt) => {
+            fetch(`${baseUrl}dashboards/${dashboardName}/visualizations/${visualization.id}/data?includeAllFields=${allFields}&filterColumn=${col}&filterValue=${val}&isDateFilter=${isDate}&formattedValue=${encodeURIComponent(fmt || '')}`)
+                .then(res => res.ok ? window.open('data.html', 'DataPopup', 'width=700,height=800,toolbar=no,location=no,status=no,menubar=no,scrollbars=yes,resizable=yes') : alert('API call failed.'))
+                .catch(() => alert('An error occurred while calling the API.'));
+        };
+
+        const value = cell.value, formattedValue = cell.formattedValue;
+        const isDate = !isNaN(Date.parse(value));
+        const filterValue = isDate ? new Date(value).toISOString() : value;
+
+        customItems.push(
+            new $.ig.RVTooltipItem("Underlying Data", `Show ${formattedValue}`, icons[0], () => fetchData(false, cell.columnName, filterValue, isDate, formattedValue)),
+            new $.ig.RVTooltipItem("Underlying Data", `Show All ${visualization.title}`, icons[1], () => fetchData(true, "AllColumns", "AllValues", false, null))
+        );
+    };
+
+
     });
   }, []);
 
